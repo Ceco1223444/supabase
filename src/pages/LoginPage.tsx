@@ -42,15 +42,23 @@ export function LoginPage() {
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
           <div>
             <Input type="email" placeholder="Email" {...register('email')} />
-            {errors.email && <p className="mt-1 text-xs text-cat-6">{errors.email.message}</p>}
+            {errors.email && (
+              <p className="mt-1 text-xs text-cat-6-text animate-[fade-in_150ms_ease-out]">
+                {errors.email.message}
+              </p>
+            )}
           </div>
           <div>
             <Input type="password" placeholder="Password" {...register('password')} />
             {errors.password && (
-              <p className="mt-1 text-xs text-cat-6">{errors.password.message}</p>
+              <p className="mt-1 text-xs text-cat-6-text animate-[fade-in_150ms_ease-out]">
+                {errors.password.message}
+              </p>
             )}
           </div>
-          {serverError && <p className="text-sm text-cat-6">{serverError}</p>}
+          {serverError && (
+            <p className="text-sm text-cat-6-text animate-[fade-in_150ms_ease-out]">{serverError}</p>
+          )}
           <Button type="submit" disabled={isSubmitting}>
             {isSubmitting ? 'Logging in…' : 'Log in'}
           </Button>

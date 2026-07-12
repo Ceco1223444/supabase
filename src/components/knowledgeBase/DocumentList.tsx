@@ -8,7 +8,7 @@ export function DocumentList() {
   const [selected, setSelected] = useState<string | null>(null)
 
   if (isLoading) return <p className="text-sm text-ink-muted">Loading…</p>
-  if (error) return <p className="text-sm text-cat-6">Failed to load knowledge base.</p>
+  if (error) return <p className="text-sm text-cat-6-text">Failed to load knowledge base.</p>
   if (!data || data.length === 0) {
     return <p className="text-sm text-ink-muted">No FAQ/policy documents ingested yet.</p>
   }
@@ -19,8 +19,16 @@ export function DocumentList() {
         {data.map((doc) => (
           <Card
             key={doc.id}
-            className="cursor-pointer hover:bg-surface-hover"
+            role="button"
+            tabIndex={0}
+            className="cursor-pointer transition-all duration-150 hover:border-accent/40 hover:bg-surface-hover hover:shadow-md active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-page"
             onClick={() => setSelected(doc.content ?? '')}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                setSelected(doc.content ?? '')
+              }
+            }}
           >
             <p className="line-clamp-4 text-sm text-ink-secondary">{doc.content}</p>
           </Card>

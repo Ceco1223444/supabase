@@ -1,26 +1,41 @@
 @import "tailwindcss";
 
 @theme {
-  --color-page: #0d0d0d;
-  --color-surface: #1a1a19;
-  --color-surface-hover: #232322;
-  --color-border: #2c2c2a;
-  --color-ink: #ffffff;
-  --color-ink-secondary: #c3c2b7;
-  --color-ink-muted: #898781;
+  --color-page: #f6f8fc;
+  --color-surface: #ffffff;
+  --color-surface-hover: #f1f3f4;
+  --color-border: #dadce0;
+  --color-border-light: #e8eaed;
+  --color-ink: #202124;
+  --color-ink-secondary: #5f6368;
+  --color-ink-muted: #80868b;
 
-  --color-accent: #3987e5;
-  --color-cat-1: #3987e5;
-  --color-cat-2: #199e70;
-  --color-cat-3: #c98500;
-  --color-cat-4: #008300;
-  --color-cat-5: #9085e9;
-  --color-cat-6: #e66767;
-  --color-cat-7: #d55181;
+  --color-accent: #1a73e8;
+  --color-accent-hover: #1765cc;
+  --color-accent-tint: #e8f0fe;
+
+  --color-cat-1: #4285f4;
+  --color-cat-2: #34a853;
+  --color-cat-3: #fbbc05;
+  --color-cat-4: #00897b;
+  --color-cat-5: #5e35b1;
+  --color-cat-6: #ea4335;
+  --color-cat-7: #c2185b;
+
+  /* Darkened variants of the cat-* hues, verified >=4.5:1 contrast for use as
+     TEXT on top of a pale bg-cat-N/15 tint (or on white/page). Raw cat-* hues
+     are for backgrounds, dots, and icons only — never for body/label text. */
+  --color-cat-1-text: #3368be;
+  --color-cat-2-text: #25793c;
+  --color-cat-3-text: #8d6903;
+  --color-cat-4-text: #007469;
+  --color-cat-5-text: #5e35b1;
+  --color-cat-6-text: #bb362a;
+  --color-cat-7-text: #c2185b;
 }
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
@@ -33,4 +48,218 @@ body {
 
 #root {
   min-height: 100svh;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Tab-switch content transition — quick fade + slight slide, never bounce/spring. */
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Send-button success checkmark — a plain ease-out scale/fade, not a bounce. */
+@keyframes check-in {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* AI draft skeleton shimmer — tied to a real in-progress async state (the
+   draft being generated), not decorative idle motion. Stops as soon as the
+   draft content arrives. */
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton-shimmer {
+  background-image: linear-gradient(
+    90deg,
+    var(--color-border-light) 25%,
+    var(--color-surface-hover) 50%,
+    var(--color-border-light) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+/* AI accent gradient — same two hues already in the palette (accent blue,
+   cat-5 purple), just combined. Used to visually mark "AI-powered" controls
+   without introducing a new color family. */
+@theme {
+  --color-ai-start: #1a73e8;
+  --color-ai-end: #7c3aed;
+}
+
+@property --ai-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes ai-border-spin {
+  to {
+    --ai-angle: 360deg;
+  }
+}
+
+/* Rotating gradient ring — only ever applied while an AI request is
+   genuinely in flight (see refineMutation.isPending in ThreadDetail), same
+   rule as .skeleton-shimmer: motion is tied to real async state, not idle. */
+.ai-loading-ring {
+  position: relative;
+}
+
+.ai-loading-ring::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(from var(--ai-angle), var(--color-ai-start), var(--color-ai-end), var(--color-ai-start));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: ai-border-spin 1.6s linear infinite;
+}
+
+/* Static (non-spinning) version for hover/open states where we want the
+   gradient ring visible without implying an in-progress request. */
+.ai-ring {
+  position: relative;
+}
+
+.ai-ring::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: linear-gradient(135deg, var(--color-ai-start), var(--color-ai-end));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 200ms ease-out;
+}
+
+.ai-ring:hover::before,
+.ai-ring[data-active='true']::before {
+  opacity: 1;
+}
+
+/* Gradient fill on hover for the AI trigger button at rest. A pseudo-class
+   selector beats a plain utility class on specificity, so this reliably
+   overrides bg-accent-tint without needing !important. */
+.ai-hover-fill:hover {
+  background: linear-gradient(135deg, var(--color-ai-start), var(--color-ai-end));
+}
+
+/* ============================================================
+   Wordmark letter-pulse — persistent left-to-right sweep.
+   One shared keyframe per letter; the stagger comes entirely from
+   animation-delay (set inline per span), so the wave repeats forever
+   in lockstep without any JS timer. Each letter's own 0-100% cycle
+   is ~1800ms: the pop occupies the first ~14% (~250ms), the rest is
+   idle hold - matching the spec's "bake the hold into the timeline"
+   instruction. currentColor picks up each span's own text-cat-N
+   color, so one keyframe rule serves all six letters correctly.
+   ============================================================ */
+@keyframes wordmark-letter-pulse {
+  0%,
+  14%,
+  100% {
+    transform: scale(1);
+    text-shadow: 0 0 0 transparent;
+  }
+  7% {
+    transform: scale(1.18);
+    text-shadow: 0 0 10px currentColor;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .wordmark-letter {
+    display: inline-block;
+    animation: wordmark-letter-pulse 1800ms ease-in-out infinite;
+  }
+}
+
+/* ============================================================
+   Splash intro — one-time 3D spin on first load per session.
+   Flat-plane rotateY on the wordmark container; each letter keeps
+   its own color since transform is applied to the parent, not the
+   individual spans. backface-visibility left at its default
+   (visible) so the letters stay visibly colored past the 90/270deg
+   marks instead of vanishing or going silhouette.
+   ============================================================ */
+@keyframes splash-spin {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+}
+
+@keyframes splash-progress {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.splash-perspective {
+  perspective: 1000px;
+}
+
+.splash-spin {
+  transform-style: preserve-3d;
+  animation: splash-spin 1800ms ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .splash-spin {
+    animation: none;
+  }
+}
+
+.splash-progress-fill {
+  animation: splash-progress 2600ms linear forwards;
 }

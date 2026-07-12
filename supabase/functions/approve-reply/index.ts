@@ -6,9 +6,25 @@ const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const N8N_WEBHOOK_URL = Deno.env.get("N8N_WEBHOOK_URL")!;
 const N8N_WEBHOOK_SECRET = Deno.env.get("N8N_WEBHOOK_SECRET")!;
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
+
+function json(body: unknown, status = 200) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { "Content-Type": "application/json", ...corsHeaders },
+  });
+}
+
 Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response(null, { status: 204, headers: corsHeaders });
+  }
   if (req.method !== "POST") {
-    return new Response(JSON.stringify({ error: "method not allowed" }), { status: 405 });
+    return json({ error: "method not allowed" }, 405);
   }
 
   const userClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
@@ -16,18 +32,18 @@ Deno.serve(async (req) => {
   });
   const { data: { user }, error: userErr } = await userClient.auth.getUser();
   if (userErr || !user?.email) {
-    return new Response(JSON.stringify({ error: "unauthorized" }), { status: 401 });
+    return json({ error: "unauthorized" }, 401);
   }
 
-  let body: { email_log_id?: number; final_response?: string };
+  let body: { email_log_id?: number; final_response?: string; refinement_prompts?: string[] };
   try {
     body = await req.json();
   } catch {
-    return new Response(JSON.stringify({ error: "invalid json body" }), { status: 400 });
+    return json({ error: "invalid json body" }, 400);
   }
-  const { email_log_id, final_response } = body;
+  const { email_log_id, final_response, refinement_prompts } = body;
   if (!email_log_id || typeof final_response !== "string") {
-    return new Response(JSON.stringify({ error: "email_log_id and final_response are required" }), { status: 400 });
+    return json({ error: "email_log_id and final_response are required" }, 400);
   }
 
   const admin = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
@@ -38,13 +54,13 @@ Deno.serve(async (req) => {
     .single();
 
   if (rowErr || !row) {
-    return new Response(JSON.stringify({ error: "not found" }), { status: 404 });
+    return json({ error: "not found" }, 404);
   }
   if (row.client_email !== user.email) {
-    return new Response(JSON.stringify({ error: "forbidden" }), { status: 403 });
+    return json({ error: "forbidden" }, 403);
   }
   if (row.status !== "pending_review") {
-    return new Response(JSON.stringify({ error: "already actioned" }), { status: 409 });
+    return json({ error: "already actioned" }, 409);
   }
 
   const { error: updateErr } = await admin
@@ -52,7 +68,7 @@ Deno.serve(async (req) => {
     .update({ final_response })
     .eq("id", email_log_id);
   if (updateErr) {
-    return new Response(JSON.stringify({ error: updateErr.message }), { status: 500 });
+    return json({ error: updateErr.message }, 500);
   }
 
   const n8nResp = await fetch(N8N_WEBHOOK_URL, {
@@ -61,15 +77,12 @@ Deno.serve(async (req) => {
       "Content-Type": "application/json",
       "X-Webhook-Secret": N8N_WEBHOOK_SECRET,
     },
-    body: JSON.stringify({ row_id: email_log_id }),
+    body: JSON.stringify({ row_id: email_log_id, refinement_prompts: refinement_prompts ?? [] }),
   });
 
   if (!n8nResp.ok) {
-    return new Response(JSON.stringify({ error: "n8n webhook failed", status: n8nResp.status }), { status: 502 });
+    return json({ error: "n8n webhook failed", status: n8nResp.status }, 502);
   }
 
-  return new Response(JSON.stringify({ ok: true }), {
-    status: 200,
-    headers: { "Content-Type": "application/json" },
-  });
+  return json({ ok: true });
 });

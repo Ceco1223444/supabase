@@ -7,7 +7,7 @@ export function InboxThreadPage() {
   const { data, isLoading, error } = useEmailLog(id ? Number(id) : undefined)
 
   if (isLoading) return <p className="text-sm text-ink-muted">Loading…</p>
-  if (error || !data) return <p className="text-sm text-cat-6">Email not found.</p>
+  if (error || !data) return <p className="text-sm text-cat-6-text">Email not found.</p>
 
   return <ThreadDetail email={data} />
 }

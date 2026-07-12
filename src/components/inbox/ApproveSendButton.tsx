@@ -1,14 +1,17 @@
 import { useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
+import { Check } from 'lucide-react'
 import { supabase } from '@/lib/supabaseClient'
 import { Button } from '@/components/ui/Button'
 
 export function ApproveSendButton({
   emailLogId,
   finalResponse,
+  refinementPrompts = [],
 }: {
   emailLogId: number
   finalResponse: string
+  refinementPrompts?: string[]
 }) {
   const [state, setState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -18,7 +21,7 @@ export function ApproveSendButton({
     setState('sending')
     setErrorMessage(null)
     const { data, error } = await supabase.functions.invoke('approve-reply', {
-      body: { email_log_id: emailLogId, final_response: finalResponse },
+      body: { email_log_id: emailLogId, final_response: finalResponse, refinement_prompts: refinementPrompts },
     })
     if (error || data?.error) {
       setState('error')
@@ -30,7 +33,12 @@ export function ApproveSendButton({
   }
 
   if (state === 'sent') {
-    return <p className="text-sm text-cat-2">Sent successfully.</p>
+    return (
+      <div className="flex items-center gap-2 rounded-md bg-cat-2/15 px-4 py-2 text-sm font-medium text-cat-2-text animate-[fade-in_200ms_ease-out]">
+        <Check className="h-4 w-4 animate-[check-in_200ms_ease-out]" strokeWidth={2.5} />
+        Sent
+      </div>
+    )
   }
 
   return (
@@ -38,7 +46,9 @@ export function ApproveSendButton({
       <Button onClick={handleApprove} disabled={state === 'sending'}>
         {state === 'sending' ? 'Sending…' : 'Approve & Send'}
       </Button>
-      {state === 'error' && <p className="text-sm text-cat-6">{errorMessage}</p>}
+      {state === 'error' && (
+        <p className="text-sm text-cat-6-text animate-[fade-in_200ms_ease-out]">{errorMessage}</p>
+      )}
     </div>
   )
 }

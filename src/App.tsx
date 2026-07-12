@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { ProtectedRoute } from '@/auth/ProtectedRoute'
 import { AppShell } from '@/components/layout/AppShell'
+import { SplashIntro } from '@/components/layout/SplashIntro'
 import { LoginPage } from '@/pages/LoginPage'
 import { SignupPage } from '@/pages/SignupPage'
 import { InboxPage } from '@/pages/InboxPage'
@@ -14,6 +15,7 @@ import { SettingsPage } from '@/pages/SettingsPage'
 function App() {
   return (
     <BrowserRouter>
+      <SplashIntro />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />

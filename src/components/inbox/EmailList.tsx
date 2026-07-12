@@ -28,7 +28,7 @@ export function EmailList() {
         className="mb-3"
       />
       {isLoading && <p className="text-sm text-ink-muted">Loading…</p>}
-      {error && <p className="text-sm text-cat-6">Failed to load emails.</p>}
+      {error && <p className="text-sm text-cat-6-text">Failed to load emails.</p>}
       {!isLoading && filtered.length === 0 && (
         <p className="text-sm text-ink-muted">No emails yet.</p>
       )}

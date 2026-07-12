@@ -16,14 +16,14 @@ export function DailyVolumeLineChart({ data }: { data: { date: string; count: nu
   return (
     <ResponsiveContainer width="100%" height={280}>
       <LineChart data={data} margin={{ top: 8, right: 16, bottom: 0, left: -16 }}>
-        <CartesianGrid stroke="#2c2c2a" vertical={false} />
-        <XAxis dataKey="date" stroke="#898781" fontSize={12} tickLine={false} />
-        <YAxis stroke="#898781" fontSize={12} tickLine={false} allowDecimals={false} />
+        <CartesianGrid stroke="#dadce0" vertical={false} />
+        <XAxis dataKey="date" stroke="#80868b" fontSize={12} tickLine={false} />
+        <YAxis stroke="#80868b" fontSize={12} tickLine={false} allowDecimals={false} />
         <Tooltip
-          contentStyle={{ background: '#1a1a19', border: '1px solid #2c2c2a', borderRadius: 8 }}
-          itemStyle={{ color: '#ffffff' }}
+          contentStyle={{ background: '#ffffff', border: '1px solid #dadce0', borderRadius: 8 }}
+          itemStyle={{ color: '#202124' }}
         />
-        <Line type="monotone" dataKey="count" stroke="#3987e5" strokeWidth={2} dot={false} />
+        <Line type="monotone" dataKey="count" stroke="#1a73e8" strokeWidth={2} dot={false} />
       </LineChart>
     </ResponsiveContainer>
   )

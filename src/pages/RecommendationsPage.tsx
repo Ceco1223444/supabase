@@ -5,7 +5,7 @@ export function RecommendationsPage() {
   const { data, isLoading, error } = useRecommendations()
 
   if (isLoading) return <p className="text-sm text-ink-muted">Loading…</p>
-  if (error) return <p className="text-sm text-cat-6">Failed to load recommendations.</p>
+  if (error) return <p className="text-sm text-cat-6-text">Failed to load recommendations.</p>
 
   return (
     <div className="flex flex-col gap-4">

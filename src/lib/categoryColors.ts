@@ -9,11 +9,11 @@ export const CATEGORY_ORDER = [
 ] as const
 
 export const CATEGORY_HEX: Record<string, string> = {
-  Reclamation: '#3987e5',
-  Shipping: '#199e70',
-  Technical: '#c98500',
-  Inventory: '#008300',
-  Pricing: '#9085e9',
-  Urgent: '#e66767',
-  Other: '#d55181',
+  Reclamation: '#4285f4',
+  Shipping: '#34a853',
+  Technical: '#fbbc05',
+  Inventory: '#00897b',
+  Pricing: '#5e35b1',
+  Urgent: '#ea4335',
+  Other: '#c2185b',
 }

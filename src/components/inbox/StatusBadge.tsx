@@ -1,7 +1,7 @@
 const STATUS_STYLES: Record<string, string> = {
-  pending_review: 'bg-cat-3/15 text-cat-3',
-  auto_sent: 'bg-cat-2/15 text-cat-2',
-  sent: 'bg-cat-2/15 text-cat-2',
+  pending_review: 'bg-cat-3/15 text-cat-3-text',
+  auto_sent: 'bg-cat-2/15 text-cat-2-text',
+  sent: 'bg-cat-2/15 text-cat-2-text',
 }
 
 const STATUS_LABELS: Record<string, string> = {
