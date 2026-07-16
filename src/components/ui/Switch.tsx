@@ -15,7 +15,7 @@ export function Switch({
       disabled={disabled}
       onClick={() => onChange(!checked)}
       className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors duration-200 ease-out hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-page disabled:opacity-50 disabled:hover:brightness-100 ${
-        checked ? 'bg-cat-2' : 'bg-border'
+        checked ? 'bg-accent' : 'bg-border'
       }`}
     >
       <span

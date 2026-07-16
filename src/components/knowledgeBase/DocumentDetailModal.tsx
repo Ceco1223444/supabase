@@ -9,11 +9,11 @@ export function DocumentDetailModal({
 }) {
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 animate-[fade-in_150ms_ease-out]"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 animate-[fade-in_150ms_ease-out]"
       onClick={onClose}
     >
       <div
-        className="max-h-[80svh] w-full max-w-2xl overflow-y-auto rounded-lg border border-border bg-surface p-6 animate-[scale-in_180ms_ease-out]"
+        className="max-h-[80svh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-surface p-6 shadow-raised animate-[scale-in_180ms_ease-out]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-4 flex items-center justify-between">

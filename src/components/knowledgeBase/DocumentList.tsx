@@ -21,7 +21,7 @@ export function DocumentList() {
             key={doc.id}
             role="button"
             tabIndex={0}
-            className="cursor-pointer transition-all duration-150 hover:border-accent/40 hover:bg-surface-hover hover:shadow-md active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-page"
+            className="cursor-pointer transition-all duration-200 ease-out hover:shadow-raised active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-page"
             onClick={() => setSelected(doc.content ?? '')}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {

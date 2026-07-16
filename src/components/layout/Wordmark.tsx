@@ -1,7 +1,5 @@
 import { WORDMARK_LETTERS } from '@/lib/wordmarkLetters'
 
-const PULSE_STAGGER_MS = 130
-
 export function Wordmark() {
   return (
     <div
@@ -11,11 +9,7 @@ export function Wordmark() {
       style={{ fontFamily: "'Roboto', system-ui, 'Segoe UI', sans-serif" }}
     >
       {WORDMARK_LETTERS.map((letter, i) => (
-        <span
-          key={i}
-          className={`wordmark-letter ${letter.colorClass}`}
-          style={{ animationDelay: `${i * PULSE_STAGGER_MS}ms` }}
-        >
+        <span key={i} className={letter.colorClass}>
           {letter.char}
         </span>
       ))}

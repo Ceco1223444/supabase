@@ -27,10 +27,24 @@ export function LabelDonutChart({ counts }: { counts: Record<string, number> }) 
           ))}
         </Pie>
         <Tooltip
-          contentStyle={{ background: '#ffffff', border: '1px solid #dadce0', borderRadius: 8 }}
-          itemStyle={{ color: '#202124' }}
+          contentStyle={{
+            background: '#ffffff',
+            border: '1px solid #efece4',
+            borderRadius: 12,
+            boxShadow: '0 4px 16px rgb(62 55 38 / 0.08)',
+          }}
+          itemStyle={{ color: '#201e19' }}
         />
-        <Legend wrapperStyle={{ color: '#5f6368', fontSize: 12 }} />
+        <Legend
+          wrapperStyle={{ fontSize: 12 }}
+          // Text wears ink tokens, never the series color; the count rides
+          // along so low-contrast slices always have a visible value.
+          formatter={(value: string) => (
+            <span style={{ color: '#5a564c' }}>
+              {value} · {counts[value] ?? 0}
+            </span>
+          )}
+        />
       </PieChart>
     </ResponsiveContainer>
   )

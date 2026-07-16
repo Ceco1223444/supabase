@@ -8,12 +8,17 @@ export const CATEGORY_ORDER = [
   'Other',
 ] as const
 
+// Muted categorical palette for charts — deliberately NOT the wordmark's
+// saturated brand hues, which stay exclusive to the logo. Slot order is the
+// colorblind-safety mechanism (validated: worst adjacent CVD ΔE 24.2 on
+// white; aqua/yellow/magenta sit below 3:1 contrast, so the donut legend
+// carries visible per-category counts as the relief).
 export const CATEGORY_HEX: Record<string, string> = {
-  Reclamation: '#4285f4',
-  Shipping: '#34a853',
-  Technical: '#fbbc05',
-  Inventory: '#00897b',
-  Pricing: '#5e35b1',
-  Urgent: '#ea4335',
-  Other: '#c2185b',
+  Reclamation: '#2a78d6',
+  Shipping: '#1baf7a',
+  Technical: '#eda100',
+  Inventory: '#008300',
+  Pricing: '#4a3aa7',
+  Urgent: '#e34948',
+  Other: '#e87ba4',
 }

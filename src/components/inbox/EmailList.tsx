@@ -25,14 +25,15 @@ export function EmailList() {
         placeholder="Search sender, subject, label…"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="mb-3"
+        className="mb-4 shadow-soft"
       />
       {isLoading && <p className="text-sm text-ink-muted">Loading…</p>}
       {error && <p className="text-sm text-cat-6-text">Failed to load emails.</p>}
       {!isLoading && filtered.length === 0 && (
         <p className="text-sm text-ink-muted">No emails yet.</p>
       )}
-      <div className="flex flex-col gap-1 overflow-y-auto">
+      {/* Slight negative margin + padding so card shadows aren't clipped by the scroll container. */}
+      <div className="-mx-1 flex flex-col gap-3 overflow-y-auto px-1 pb-2">
         {filtered.map((email) => (
           <EmailListItem key={email.id} email={email} />
         ))}

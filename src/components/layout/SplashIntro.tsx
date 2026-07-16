@@ -13,14 +13,19 @@ export function SplashIntro() {
     sessionStorage.getItem(SESSION_KEY) ? 'hidden' : 'playing',
   )
 
+  // One timer per phase: a single effect owning both timers gets its cleanup
+  // run on the 'playing' → 'fading' state change, which cancels the hide
+  // timer before it fires and strands the overlay at opacity-0, blocking all
+  // pointer events under it.
   useEffect(() => {
-    if (phase !== 'playing') return
-    sessionStorage.setItem(SESSION_KEY, '1')
-    const fadeTimer = setTimeout(() => setPhase('fading'), FADE_START_MS)
-    const hideTimer = setTimeout(() => setPhase('hidden'), FADE_START_MS + FADE_DURATION_MS)
-    return () => {
-      clearTimeout(fadeTimer)
-      clearTimeout(hideTimer)
+    if (phase === 'playing') {
+      sessionStorage.setItem(SESSION_KEY, '1')
+      const fadeTimer = setTimeout(() => setPhase('fading'), FADE_START_MS)
+      return () => clearTimeout(fadeTimer)
+    }
+    if (phase === 'fading') {
+      const hideTimer = setTimeout(() => setPhase('hidden'), FADE_DURATION_MS)
+      return () => clearTimeout(hideTimer)
     }
   }, [phase])
 
@@ -30,7 +35,7 @@ export function SplashIntro() {
     <div
       aria-hidden="true"
       className={`fixed inset-0 z-[100] flex flex-col items-center justify-center gap-8 bg-page transition-opacity ease-out ${
-        phase === 'fading' ? 'opacity-0' : 'opacity-100'
+        phase === 'fading' ? 'pointer-events-none opacity-0' : 'opacity-100'
       }`}
       style={{ transitionDuration: `${FADE_DURATION_MS}ms` }}
     >

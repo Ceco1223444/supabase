@@ -18,6 +18,9 @@ supabase/.branches
 supabase/data_dump.sql
 *.sql.bak
 
+__pycache__
+*.pyc
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

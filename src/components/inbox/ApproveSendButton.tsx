@@ -34,7 +34,7 @@ export function ApproveSendButton({
 
   if (state === 'sent') {
     return (
-      <div className="flex items-center gap-2 rounded-md bg-cat-2/15 px-4 py-2 text-sm font-medium text-cat-2-text animate-[fade-in_200ms_ease-out]">
+      <div className="flex items-center gap-2 rounded-full bg-cat-2/12 px-4 py-2 text-sm font-medium text-cat-2-text animate-[fade-in_200ms_ease-out]">
         <Check className="h-4 w-4 animate-[check-in_200ms_ease-out]" strokeWidth={2.5} />
         Sent
       </div>

@@ -64,7 +64,7 @@ export function ThreadDetail({ email }: { email: EmailLog }) {
         <CategoryBadge label={email.label} />
         <StatusBadge status={email.status} />
       </div>
-      <h1 className="text-lg font-semibold text-ink">{email.subject}</h1>
+      <h1 className="text-2xl font-semibold tracking-tight text-ink">{email.subject}</h1>
       <p className="text-sm text-ink-muted">From {email.sender_email}</p>
 
       <Card>
@@ -108,7 +108,7 @@ export function ThreadDetail({ email }: { email: EmailLog }) {
                 title="Refine with AI"
                 style={
                   showRefineInput
-                    ? { background: 'linear-gradient(135deg, var(--color-ai-start), var(--color-ai-end))' }
+                    ? { background: 'var(--color-accent)' }
                     : undefined
                 }
                 className={`ai-hover-fill flex h-9 items-center gap-0 overflow-hidden rounded-full pl-2.5 pr-2.5 transition-all duration-300 ease-out hover:gap-1.5 hover:pl-3 hover:pr-4 focus-visible:gap-1.5 focus-visible:pl-3 focus-visible:pr-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface ${
@@ -141,7 +141,7 @@ export function ThreadDetail({ email }: { email: EmailLog }) {
               <div
                 role="status"
                 aria-label="Generating AI draft"
-                className="flex flex-col gap-2 rounded-md border border-border bg-page p-3"
+                className="flex flex-col gap-2 rounded-lg bg-page p-3"
               >
                 <div className="h-3 w-5/6 rounded skeleton-shimmer" />
                 <div className="h-3 w-full rounded skeleton-shimmer" />
@@ -189,8 +189,8 @@ export function ThreadDetail({ email }: { email: EmailLog }) {
                   value={draft}
                   onChange={(e) => setDraft(e.target.value)}
                   rows={10}
-                  style={justRefined ? { borderColor: 'var(--color-ai-end)' } : undefined}
-                  className="w-full rounded-md border border-border bg-page p-3 text-sm text-ink outline-none transition-colors duration-300 focus:border-accent focus:ring-2 focus:ring-accent/20"
+                  style={justRefined ? { borderColor: 'var(--color-accent)' } : undefined}
+                  className="w-full rounded-lg border border-border bg-page p-3 text-sm text-ink outline-none transition-colors duration-300 focus:border-accent focus:ring-2 focus:ring-accent/20"
                 />
               </div>
             ) : (
