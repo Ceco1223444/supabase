@@ -71,14 +71,23 @@ Deno.serve(async (req) => {
     return json({ error: updateErr.message }, 500);
   }
 
-  const n8nResp = await fetch(N8N_WEBHOOK_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Webhook-Secret": N8N_WEBHOOK_SECRET,
-    },
-    body: JSON.stringify({ row_id: email_log_id, refinement_prompts: refinement_prompts ?? [] }),
-  });
+  let n8nResp: Response;
+  try {
+    n8nResp = await fetch(N8N_WEBHOOK_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Webhook-Secret": N8N_WEBHOOK_SECRET,
+      },
+      body: JSON.stringify({ row_id: email_log_id, refinement_prompts: refinement_prompts ?? [] }),
+    });
+  } catch (err) {
+    // n8n unreachable (tunnel down / DNS / timeout). Return a readable, CORS'd
+    // error instead of letting the throw bubble up — an unhandled throw yields a
+    // response with no CORS headers, which the browser reports as the opaque
+    // "Failed to send a request to the Edge Function".
+    return json({ error: "could not reach n8n — is the local tunnel up?", detail: String(err).slice(0, 200) }, 502);
+  }
 
   if (!n8nResp.ok) {
     return json({ error: "n8n webhook failed", status: n8nResp.status }, 502);

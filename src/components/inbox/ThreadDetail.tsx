@@ -93,43 +93,28 @@ export function ThreadDetail({ email }: { email: EmailLog }) {
             />
           </button>
           {canRefine && (
-            <div
-              className={`group relative shrink-0 rounded-full ${refineMutation.isPending ? 'ai-loading-ring' : 'ai-ring'}`}
-              data-active={showRefineInput && !refineMutation.isPending ? 'true' : undefined}
+            <button
+              type="button"
+              onClick={() => {
+                setShowRefineInput((prev) => !prev)
+                setExpanded(true)
+              }}
+              aria-pressed={showRefineInput}
+              title="Refine this reply with AI"
+              className={`inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full px-4 text-sm font-semibold shadow-sm transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface ${
+                showRefineInput
+                  ? 'bg-accent text-white shadow-md'
+                  : 'bg-accent-tint text-accent hover:bg-accent hover:text-white hover:shadow-md'
+              } ${refineMutation.isPending ? 'ai-loading-ring' : ''}`}
             >
-              <button
-                type="button"
-                onClick={() => {
-                  setShowRefineInput((prev) => !prev)
-                  setExpanded(true)
-                }}
-                aria-label="Refine with AI"
-                aria-pressed={showRefineInput}
-                title="Refine with AI"
-                style={
-                  showRefineInput
-                    ? { background: 'var(--color-accent)' }
-                    : undefined
-                }
-                className={`ai-hover-fill flex h-9 items-center gap-0 overflow-hidden rounded-full pl-2.5 pr-2.5 transition-all duration-300 ease-out hover:gap-1.5 hover:pl-3 hover:pr-4 focus-visible:gap-1.5 focus-visible:pl-3 focus-visible:pr-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface ${
-                  showRefineInput
-                    ? 'w-[6.5rem] gap-1.5 pl-3 pr-4 text-white shadow-md'
-                    : 'w-9 bg-accent-tint text-accent hover:w-[6.5rem] hover:text-white hover:shadow-md focus-visible:w-[6.5rem]'
-                }`}
-              >
-                <Sparkles
-                  className={`h-4 w-4 shrink-0 ${refineMutation.isPending ? 'animate-pulse' : ''}`}
-                  aria-hidden="true"
-                />
-                <span
-                  className={`whitespace-nowrap text-sm font-medium transition-opacity duration-200 ${
-                    showRefineInput ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 group-focus-within:opacity-100'
-                  }`}
-                >
-                  Refine
-                </span>
-              </button>
-            </div>
+              <Sparkles
+                className={`h-4 w-4 shrink-0 ${refineMutation.isPending ? 'animate-pulse' : ''}`}
+                aria-hidden="true"
+              />
+              <span className="whitespace-nowrap">
+                {refineMutation.isPending ? 'Refining…' : 'Refine with AI'}
+              </span>
+            </button>
           )}
         </div>
         <div
